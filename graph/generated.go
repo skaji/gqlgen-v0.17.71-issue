@@ -91,7 +91,7 @@ func (e *executableSchema) Schema() *ast.Schema {
 	return parsedSchema
 }
 
-func (e *executableSchema) Complexity(typeName, field string, childComplexity int, rawArgs map[string]any) (int, bool) {
+func (e *executableSchema) Complexity(ctx context.Context, typeName, field string, childComplexity int, rawArgs map[string]any) (int, bool) {
 	ec := executionContext{nil, e, 0, 0, nil}
 	_ = ec
 	switch typeName + "." + field {
@@ -101,7 +101,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		args, err := ec.field_Mutation_createTodo_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_createTodo_args(ctx, rawArgs)
 		if err != nil {
 			return 0, false
 		}
@@ -3591,19 +3591,13 @@ func (ec *executionContext) unmarshalNNewTodo2githubᚗcomᚋskajiᚋgqlgenᚑv0
 }
 
 func (ec *executionContext) unmarshalNStatus2githubᚗcomᚋskajiᚋgqlgenᚑv0ᚗ17ᚗ71ᚑissueᚋenumᚐStatus(ctx context.Context, v any) (enum.Status, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := enum.Status(tmp)
+	var res enum.Status
+	err := res.UnmarshalJSON(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNStatus2githubᚗcomᚋskajiᚋgqlgenᚑv0ᚗ17ᚗ71ᚑissueᚋenumᚐStatus(ctx context.Context, sel ast.SelectionSet, v enum.Status) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
+	return ec._Status(ctx, sel, &v)
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v any) (string, error) {
